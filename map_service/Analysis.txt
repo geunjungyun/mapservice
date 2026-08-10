@@ -1,0 +1,10 @@
+1|UQA240|0|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA240
+1|UQA121|0|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA121
+1|UQA122|0|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA122
+1|UQA123|0|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA123
+1|UQA220|0|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA220
+1|UQA240,UQA121|1|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA240_UQA121
+1|UQA121,UQA122|1|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA121_UQA122
+1|UQA122,UQA123|1|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA122_UQA123
+1|UQA123,UQA220|1|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA123_UQA220
+1|UQA123,UQA220,UQA122|1|D:\coops\service\20200331\layers|D:\coops\service\analysis\UQA123_UQA220_UQA122

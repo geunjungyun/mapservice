@@ -1,0 +1,146 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "GisStyleProcessor",
+            "request": "launch",
+            "mainClass": "GisStyleProcessor",
+            "projectName": "MapService"
+        },
+        {
+            "type": "java",
+            "name": "Debug Jetty",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 8000,
+            "preLaunchTask": "run-jetty"
+        },
+        {
+            "type": "java",
+            "name": "Remote Debug (192.168.90.170:7072)",
+            "request": "attach",
+            "hostName": "192.168.90.170",
+            "port": 7072
+        },
+        {
+            "type": "java",
+            "name": "Run DataConv copyFreelayer2Shp",
+            "request": "launch",
+            "mainClass": "com.dawul.data.operate.DataConv",
+            "projectName": "MapService",
+            "args": [
+                "copyFreeLayer2Shape",
+                "E:\\walk_servcie\\umd_20260102\\dw_wlink_cate",
+                "E:\\walk_servcie\\umd_20260102\\dw_wlink_cate"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run TileUI 7070",
+            "request": "launch",
+            "mainClass": "com.gis2.data.job.ui.TileUI",
+            "projectName": "MapService",
+            "args": [
+                "http://192.168.90.170:7070/MapAppServer/TileCreate?state=get",
+                "1099"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Oper emap2",
+            "request": "launch",
+            "mainClass": "Oper",
+            "projectName": "MapService",
+            "args": [
+                "D:\\workspace3\\mapservice\\map_service\\emap2.properties"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "GisStyleProcessor",
+            "request": "launch",
+            "mainClass": "GisStyleProcessor",
+            "projectName": "MapService",
+            "args": [
+                "F:/coops/project/ori/styles.xml",
+                "F:/coops/project/ori/mapInfo.xml",
+                "F:/coops/project/out/styles.xml",
+                "F:/coops/project/out/mapInfo.xml",
+                "emp01,emp02"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "GisStyleExcelTool_export엑셀",
+            "request": "launch",
+            "mainClass": "GisStyleExcelTool",
+            "projectName": "MapService",
+            "args": [
+                "export",
+                "F:/coops/project/out/styles.xml",
+                "F:/coops/project/out/emap.xlsm",
+                "F:/coops/project/out/mapInfo_emp01.xml",
+                "F:/coops/project/out/mapInfo_emp02.xml"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "GisStyleExcelTool_importXML",
+            "request": "launch",
+            "mainClass": "GisStyleExcelTool",
+            "projectName": "MapService",
+            "args": [
+                "import",
+                "F:/coops/project/out/emap.xlsm",
+                "F:/coops/tileset/output/emapv/"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Oper per",
+            "request": "launch",
+            "mainClass": "Oper",
+            "projectName": "MapService",
+            "args": [
+                "D:\\workspace3\\mapservice\\map_service\\per.properties"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "TileDB1",
+            "request": "launch",
+            "mainClass": "com.gis2.storage.TileDB",
+            "projectName": "MapService",
+            "args": [
+                "fromDBtoFile",
+                "F:\\coops\\2024\\tileset\\output\\emapv\\tiles\\emp01",
+                "F:\\coops\\2024\\1"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "TileDB_emapv",
+            "request": "launch",
+            "mainClass": "com.gis2.storage.TileDB",
+            "projectName": "MapService",
+            "args": [
+                "fromDBtoFile",
+                "F:\\coops\\2024\\tileset\\output\\emapv\\tiles\\emp01",
+                "F:\\coops\\2024\\com\\emapv"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "TileDB_emapHD",
+            "request": "launch",
+            "mainClass": "com.gis2.storage.TileDB",
+            "projectName": "MapService",
+            "args": [
+                "fromDBtoFile",
+                "F:/coops/2024/tileset/output/emap/tiles/emp01-hd",
+                "F:/coops/2024/com/emap_hd"
+            ]
+        }
+    ]
+}

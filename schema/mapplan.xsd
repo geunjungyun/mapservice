@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"> 	
+
+	
+	<xs:complexType name="protocol">
+    	<xs:sequence>
+    		<xs:element name="header" maxOccurs="1" minOccurs="1" type="header"></xs:element>
+    		<xs:element name="body" maxOccurs="1" minOccurs="1" type="xs:anySimpleType"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+
+
+	<xs:complexType name = "header">
+		<xs:sequence>
+ 		<xs:element name="result" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+ 		<xs:element name="resultDesc" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+ 		<xs:element name="req" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+ 		<xs:element name="key" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+		
+	</xs:complexType>
+
+	<xs:complexType name="tiles">
+		<xs:annotation><xs:documentation>주제도표현 응답</xs:documentation></xs:annotation>
+		<xs:sequence>
+			<xs:element name="tileset" type="tileset" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="layer">
+		<xs:annotation><xs:documentation>화면 주제도 종류 산출</xs:documentation></xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="code" type="xs:string" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	
+	<xs:complexType name="codes">
+		
+		<xs:sequence>
+			<xs:element name="layer" type="layer" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="pnu_geo">
+		<xs:sequence>
+			<xs:element name="layer" type="layerGeo" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="layerGeo">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="geojson" type="xs:anySimpleType" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="analysis">
+		<xs:sequence>
+			<xs:element name="layer" type="layerArea" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="layerArea">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="codes" type="codeArea" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="codeArea">
+		<xs:sequence>
+			<xs:element name="code" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="area" type="xs:double" maxOccurs="1" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="tileset">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+			<xs:element name="tile" type="xs:string" maxOccurs="unbounded" minOccurs="1"></xs:element>
+			<xs:element name="layer" type="xs:string" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	
+
+	<xs:complexType name="excel">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="foldName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="foldName1" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="foldName2" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="epsg" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="code" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="deleteCode" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="fillColor" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="fillWidth" type="xs:float" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="lineColor" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="lineWidth" type="xs:float" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="codeField" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="textField" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="landCityName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="fieldType" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="drawOrder" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="addFields" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+<!-- 			<xs:element name="pkField" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element> -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="layerInfo" type="layerInfo"></xs:element>
+ 	
+	<xs:complexType name="layerInfo">
+		<xs:annotation><xs:documentation>
+			FreeLayer 파일의 메타 정보
+		</xs:documentation></xs:annotation>	
+		<xs:sequence>
+			<xs:element name="mbr" type="mbr">
+				<xs:annotation><xs:documentation>
+					객체가 존재하는 최대 외곽 영역의 좌표
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="schema" type="field" maxOccurs="unbounded" minOccurs="1">
+				<xs:annotation><xs:documentation>
+					컬럼 정의
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="charSet" type="xs:string">
+				<xs:annotation><xs:documentation>
+					인코딩 셋
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="projection" type="xs:string">
+				<xs:annotation><xs:documentation>
+					좌표계 투영 제원, Well Known Text (WKT), https://epsg.io
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			
+			<xs:element name="name" type="xs:string">
+				<xs:annotation><xs:documentation>
+					레이어 이름
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="desc" type="xs:string">
+				<xs:annotation><xs:documentation>
+					레이어 설명
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="createDate" type="xs:date">
+				<xs:annotation><xs:documentation>
+					생성 날짜
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="modifyDate" type="xs:date">
+				<xs:annotation><xs:documentation>
+					수정 날짜
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="user" type="xs:string"></xs:element>
+			<xs:element name="objectCount" type="xs:int">
+				<xs:annotation><xs:documentation>
+					객체 전체 개수
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			<xs:element name="maxObjMbr" type="mbr">
+				<xs:annotation><xs:documentation>
+					경량화 가공 시 참조한느 값으로 격자 자르기 유무를 판단함.
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+			
+			<xs:element name="maxObjSize" type="xs:int">
+				<xs:annotation><xs:documentation>
+					데이타 저장 시 객체를 하나의 파일로 저장할지 판단함.
+				</xs:documentation></xs:annotation>	
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="geoType">
+		<xs:restriction base="xs:string">
+<!-- 			<xs:enumeration value="point" /> -->
+<!-- 			<xs:enumeration value="polyline" /> -->
+<!-- 			<xs:enumeration value="polygon" /> -->
+				<xs:enumeration value="Point" />
+				<xs:enumeration value="LineString" />
+				<xs:enumeration value="Polygon" />
+				<xs:enumeration value="MultiPoint" />
+				<xs:enumeration value="MultiLineString" />
+				<xs:enumeration value="MultiPolygon" />
+				<xs:enumeration value="GeometryCollection" />
+				<xs:enumeration value="Raster" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="mbr">
+		<xs:annotation>
+			<xs:documentation>
+				최소, 최대 x축 y축 좌표 값
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="minx" type="xs:double"></xs:element>
+			<xs:element name="miny" type="xs:double"></xs:element>
+			<xs:element name="maxx" type="xs:double"></xs:element>
+			<xs:element name="maxy" type="xs:double"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="fieldType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="byte" />
+			<xs:enumeration value="short" />
+			<xs:enumeration value="long" />
+			<xs:enumeration value="int" />
+			<xs:enumeration value="float" />
+			<xs:enumeration value="long" />
+			<xs:enumeration value="double" />
+			<xs:enumeration value="date" />
+			<xs:enumeration value="string" />
+			<xs:enumeration value="text" />
+			<xs:enumeration value="binary" />
+			<xs:enumeration value="bigdecimal" />
+			<xs:enumeration value="Point" />
+			<xs:enumeration value="LineString" />
+			<xs:enumeration value="Polygon" />
+			
+			<xs:enumeration value="MultiPoint" />
+			<xs:enumeration value="MultiLineString" />
+			<xs:enumeration value="MultiPolygon" />
+			
+ 			<xs:enumeration value="GeometryCollection" />
+ 			<xs:enumeration value="Geometry" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="field">
+		<xs:annotation>
+			<xs:documentation>
+				"fieldType"이 Geometry,GeometryCollection,MultiPolygon,MultiLineString,MultiPoint,Polygon,LineString,Point
+				의 경우 "name"의 값은 "the_geom"으로 해야 데이타 변환 호환성에 문제가 없음. 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="desc" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="type" type="fieldType" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="size" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="scale" type="xs:short" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="isIndex" type="xs:boolean" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="simpleLine" type="xs:float" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="simpleArea" type="xs:float" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="isCodeIndex" type="xs:boolean" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+					분류 값으로 존재하는 컬럼의 값을 분류 값 별로 공간 인덱스를 생성하고 검색 시 입력된 코드에 존재하는 데이타만 검색해서 응답
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+<!-- 			<xs:element name="projection" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element> -->
+<!-- 			<xs:element name="geometryType" type="geoType" maxOccurs="1" minOccurs="0"></xs:element> -->
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="users">
+		<xs:sequence>
+			<xs:element name="user" type="user" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element name="updateTime" type="xs:long" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="user">
+		<xs:sequence>
+			<xs:element name="key" type="xs:string"></xs:element>
+			<xs:element name="function" type="function" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element name="domain" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element name="updateTime" type="xs:long" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="startTime" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="endTime" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="function">
+		<xs:sequence>
+			<xs:element name="dayCnt" type="xs:int"></xs:element>
+			<xs:element name="name" type="xs:string"></xs:element>
+			<xs:element name="cnt" type="xs:int"></xs:element>
+			<xs:element name="content" type="content" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="content">
+		<xs:sequence>
+			<xs:element name="dayCnt" type="xs:int"></xs:element>
+			<xs:element name="name" type="xs:string"></xs:element>
+			<xs:element name="cnt" type="xs:int"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+    
+</xs:schema>

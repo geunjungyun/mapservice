@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jaxb-gen" basedir=".">
+
+	<!-- JAXB2 classpath ============================ -->
+	<!-- for jaxb 2.0 -->
+	<!--<property name="lib.dir" value="${basedir}/lib/jaxb2.0" /> -->
+	
+	<!-- for jaxb 2.1 -->
+<!-- 	<property name="lib.dir" value="${basedir}/lib/jaxb2.1" /> -->
+	<!-- for jaxb 2.2-->
+ 	<property name="lib.dir" value="${basedir}/lib/jaxb2.2" />
+
+	<!-- Marshalling Config ============================ -->
+	<!-- == marshalling target package == -->
+	<property name="marshalling.package" value="${basedir}/src/main/java/com/google/code/j2eeshowcases/jaxbgen/marshalling" />
+	<!-- == schema output directory == -->
+	<property name="schema.output.dir" value="${basedir}/schema" />
+	<!-- == schema output filename == -->
+	<property name="schema.output.filename" value="schema1.xsd" />
+
+	<!-- UnMarshalling Config ============================ -->
+	<property name="unmarshalling.src" value="${basedir}/src/main/java/" />
+	
+	<!--<property name="unmarshalling.package" value="com.google.code.j2eeshowcases.jaxbgen.unmarshalling" />-->
+	<property name="unmarshalling.package" value="com.gis.protocol.freegis3" />
+	<!--<property name="unmarshalling.package" value="com.tilemap" />-->
+	<!--<property name="unmarshalling.package" value="com.data.wooriwm.unmarshalling" />-->
+
+	<!-- class path schemagen (for marshalling task) ======= -->
+
+	<!-- class path xjc (for unmarshalling task) ========= -->
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath>
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</classpath>
+	</taskdef>
+
+	<target name="init">
+		<delete>
+			<fileset dir="${schema.output.dir}" includes="**/*.*" />
+		</delete>
+	</target>
+
+	<!-- JAXB marshalling (java to schema) ========================= -->
+	<target name="marshalling (java to schema)" depends="init">
+		<schemagen srcdir="${marshalling.package}" destdir="${schema.output.dir}">
+			<!--
+			<schema namespace="http://beyondj2ee.egloos.com/" file ="${schema.output.filename}"/>
+			-->
+			<include name="*.java" />
+		</schemagen>
+	</target>
+
+	<!-- JAXB unmarshalling (schema to java) ========================= -->
+	<target name="unmarshalling (shema to java)">
+		<!--<xjc schema="${schema.output.dir}/all.xsd" target="${unmarshalling.src}" package="${unmarshalling.package}" />-->
+		<!--<xjc schema="${schema.output.dir}/kt_api.xsd" target="${unmarshalling.src}" package="${unmarshalling.package}" />-->
+		<!--<xjc schema="${schema.output.dir}/wooriwm.xsd" target="${unmarshalling.src}" package="${unmarshalling.package}" />-->
+		<!--<xjc schema="${schema.output.dir}/Service.xsd" target="${unmarshalling.src}" package="${unmarshalling.package}" />-->
+		<xjc schema="${schema.output.dir}/dw_repository.xsd" target="${unmarshalling.src}" package="${unmarshalling.package}" />
+	</target>
+
+	<!-- JAXB marshalling (java to schema),JAXB unmarshalling (schema to java) ========= -->
+	<target name="marshalling And unmarshalling" depends="marshalling (java to schema),unmarshalling (shema to java)"/>
+	
+	
+	<property name="jdk.dir" value="c:\Program Files\Java\jdk1.8.0_211" />
+
+	<property name="jdk.path" value="${java.home}" />
+	
+	<property name="src.dir" value="${basedir}/src/main/java" />
+	
+	<target name="xjc" description="....">
+	    <exec executable="${jdk.dir}/bin/xjc.exe">
+	        <arg value="-d"/>
+	        <arg value="${src.dir}"/>
+	        <arg value="-p"/>
+	        <arg value="com.gis.protocol.freegis3"/>
+	        <arg value="-encoding"/>
+	        <arg value="utf-8"/>
+	        <arg value="${basedir}/schema/http.xsd"/>
+	    </exec>
+		 
+	</target>
+
+</project>

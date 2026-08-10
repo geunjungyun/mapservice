@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?><Capabilities xmlns="http://www.opengis.net/wmts/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/wmts/1.0 http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd">
+	<!-- Service Identification -->
+	<ows:ServiceIdentification>
+		<ows:Title>바로e맵</ows:Title>
+		<ows:ServiceType>OGC WMTS</ows:ServiceType>
+		<ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+	</ows:ServiceIdentification>
+	<!-- Operations Metadata -->
+	<ows:OperationsMetadata>
+		<ows:Operation name="GetCapabilities">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get xlink:href="http://localhost:8070/map/MapService?SERVICE">
+						<ows:Constraint name="GetEncoding">
+							<ows:AllowedValues>
+								<ows:Value>RESTful</ows:Value>
+							</ows:AllowedValues>
+						</ows:Constraint>
+					</ows:Get>
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+		<ows:Operation name="GetTile">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get xlink:href="http://localhost:8070/map/MapService/">
+						<ows:Constraint name="GetEncoding">
+							<ows:AllowedValues>
+								<ows:Value>RESTful</ows:Value>
+							</ows:AllowedValues>
+						</ows:Constraint>
+					</ows:Get>
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+	</ows:OperationsMetadata>
+	<Contents>
+		<!--Layer -->
+		<Layer>
+			<ows:Title>emap</ows:Title>
+			<ows:Identifier>sd</ows:Identifier>
+			
+<!-- 			<ows:BoundingBox crs="urn:ogc:def:crs:EPSG::5179"> -->
+<!-- 				<ows:LowerCorner>-200000.0 -3015.4524155292</ows:LowerCorner> -->
+<!-- 				<ows:UpperCorner>3803015.45241553 4000000.0</ows:UpperCorner> -->
+<!-- 			</ows:BoundingBox> -->
+			
+			<ows:BoundingBox crs="urn:ogc:def:crs:EPSG::5179">
+				<ows:LowerCorner>-160477 1328422</ows:LowerCorner>
+				<ows:UpperCorner>2372590 2962987</ows:UpperCorner>
+			</ows:BoundingBox>
+			
+			
+<!-- 			<ows:WGS84BoundingBox crs="urn:ogc:def:crs:OGC:2:84"> -->
+<!-- 				<ows:LowerCorner>112.5 27.059125784374068</ows:LowerCorner> -->
+<!-- 				<ows:UpperCorner>140.625 45.089035564831036</ows:UpperCorner> -->
+<!-- 			</ows:WGS84BoundingBox> -->
+			
+			<Style isDefault="true">
+				<ows:Title>Default Style</ows:Title>
+				<ows:Identifier>default</ows:Identifier>
+			</Style>
+			<Format>image/png</Format>
+			<TileMatrixSetLink>
+				<TileMatrixSet>EPSG:5179</TileMatrixSet>
+			</TileMatrixSetLink>
+			<ResourceURL format="image/png" resourceType="tile" template="http://localhost:8070/map/MapService?req=timg&amp;timg=emap/emp01/{TileMatrix}/{TileCol}/{TileRow}.png"/>
+
+		</Layer>
+		<!--TileMatrixSet -->
+		
+    <TileMatrixSet>
+      <ows:Identifier>EPSG:5179</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:EPSG::5179</ows:SupportedCRS>
+
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>7460571.42857143</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>64</MatrixWidth>
+        <MatrixHeight>64</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>2</ows:Identifier>
+        <ScaleDenominator>3730285.71428571</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>128</MatrixWidth>
+        <MatrixHeight>128</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>3</ows:Identifier>
+        <ScaleDenominator>1865142.85714286</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>256</MatrixWidth>
+        <MatrixHeight>256</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>4</ows:Identifier>
+        <ScaleDenominator>932571.428571429</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>512</MatrixWidth>
+        <MatrixHeight>512</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>5</ows:Identifier>
+        <ScaleDenominator>466285.714285714</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>1024</MatrixWidth>
+        <MatrixHeight>1024</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>6</ows:Identifier>
+        <ScaleDenominator>233142.857142857</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>2048</MatrixWidth>
+        <MatrixHeight>2048</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>7</ows:Identifier>
+        <ScaleDenominator>116571.428571429</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>4096</MatrixWidth>
+        <MatrixHeight>4096</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>8</ows:Identifier>
+        <ScaleDenominator>58285.7142857143</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>8192</MatrixWidth>
+        <MatrixHeight>8192</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>9</ows:Identifier>
+        <ScaleDenominator>29142.8571428571</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>16384</MatrixWidth>
+        <MatrixHeight>16384</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>10</ows:Identifier>
+        <ScaleDenominator>14571.4285714286</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>32768</MatrixWidth>
+        <MatrixHeight>32768</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>11</ows:Identifier>
+        <ScaleDenominator>7285.71428571429</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>65536</MatrixWidth>
+        <MatrixHeight>65536</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>12</ows:Identifier>
+        <ScaleDenominator>3642.85714285714</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>131072</MatrixWidth>
+        <MatrixHeight>131072</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>13</ows:Identifier>
+        <ScaleDenominator>1821.42857142857</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>262144</MatrixWidth>
+        <MatrixHeight>262144</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>14</ows:Identifier>
+        <ScaleDenominator>910.714285714286</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>524288</MatrixWidth>
+        <MatrixHeight>524288</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>		
+		
+
+	</Contents>
+	<ServiceMetadataURL xlink:href="ttp://localhost:8070/map/MapService?SERVICE"/>
+</Capabilities>

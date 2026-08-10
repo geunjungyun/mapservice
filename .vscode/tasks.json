@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "run-jetty",
+            "type": "shell",
+            "command": "mvn",
+            "args": [
+                "jetty:run"
+            ],
+            "options": {
+                "env": {
+                    "MAVEN_OPTS": "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
+                }
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": ".*"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Scanning for projects...",
+                    "endsPattern": "Started o.e.j.m.p.JettyWebAppContext"
+                }
+            },
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "jaxb-generate",
+            "type": "shell",
+            "command": "mvn",
+            "args": [
+                "generate-sources"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            }
+        }
+    ]
+}

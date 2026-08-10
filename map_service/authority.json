@@ -1,0 +1,78 @@
+{
+  "user": [
+    {
+      "key": "221df9812idf12109812dfa",
+      "function": [
+        {
+          "dayCnt": 10000,
+          "name": "reg10.tile",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 5,
+          "name": "reg10.layer",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 5000,
+          "name": "reg20.tile",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 5,
+          "name": "reg20.layer",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 5000,
+          "name": "emap.tile",
+          "cnt": 0
+        }
+      ],
+      "domain": [
+        "klandmap.com",
+        "www.klandmap.com",
+        "192.168.60.*",
+        "192.168.100.209"
+      ],
+      "startTime": "2024-12-09 16:26:49.564454"
+    },
+    {
+      "key": "981edekdi1298d12ddk121",
+      "function": [
+        {
+          "dayCnt": 10000,
+          "name": "reg10.tile",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 5,
+          "name": "reg10.layer",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 5000,
+          "name": "reg20.tile",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 5,
+          "name": "reg20.layer",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 10000,
+          "name": "emap.tile",
+          "cnt": 0
+        }
+      ],
+      "domain": [
+        "192.168.60.*",
+        "192.168.100.209",
+        "192.168.100.*",
+        "112.121.1.2"
+      ],
+      "startTime": "2024-12-09 16:26:49.564454"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "user": [
+    {
+      "key": "221df9812idf12109812dfa",
+      "function": [
+        {
+          "dayCnt": 99999999,
+          "name": "ANALYSIS",
+          "cnt": 0
+        },
+        {
+          "dayCnt": 99999999,
+          "name": "TILE",
+          "cnt": 0
+        }
+      ],
+      "domain": [
+        "klandmap.com",
+        "www.klandmap.com",
+        "192.168.60.*",
+        "192.168.100.209"
+      ],
+      "startTime": "2024-12-09 16:26:49.564454"
+    },
+    {
+      "key": "981edekdi1298d12ddk121",
+      "function": [
+        {
+          "dayCnt": 10000,
+          "name": "ANALYSIS",
+          "cnt": 5
+        },
+        {
+          "dayCnt": 5000,
+          "name": "TILE",
+          "cnt": 0
+        }
+      ],
+      "domain": [
+        "192.168.60.217",
+        "192.168.100.209",
+        "112.121.1.2"
+      ],
+      "startTime": "2024-12-09 16:26:49.564454"
+    }
+  ]
+}

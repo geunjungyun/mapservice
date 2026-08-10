@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenLayers 예제</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+        /* 왼쪽 화면: 30% */
+        .left-pane {
+            flex: 0 0 20%; /* 고정 비율 30% */
+            background-color: #f0f0f0;
+        }
+        /* 오른쪽 OpenLayers 지도: 70% */
+        .right-pane {
+            flex: 1; /* 나머지 70% */
+            position: relative;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <div id ="left" class="left-pane"></div> <!-- 왼쪽 빈 화면 -->
+    <div class="right-pane">
+        <div id="map"></div> <!-- 오른쪽 OpenLayers 지도 -->
+    </div>
+	<script src="./jquery/jquery-1.12.2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v9.2.4/dist/ol.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.11.0/proj4.js"></script>
+    <script src="./js/map_pre3.js"></script>    
+
+</body>
+</html>

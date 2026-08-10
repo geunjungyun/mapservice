@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration status="INFO">
+    <Properties>
+        <Property name="MP_LOG_PATH">./logs</Property>
+        <Property name="layoutPattern">[%d{yy-MM-dd HH:mm:ss}] %r @ [%-5p] %C{5}.%M().LINE:%L - %m%n</Property>
+		<Property name="serviceLayoutPattern">%d{yyyy-MM-dd HH:mm:ss}|%m%n</Property>
+    </Properties>
+
+	<Appenders>
+		<!-- 콜솔  -->
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="${layoutPattern}" />
+		</Console>
+		
+		<!-- 서버요청으로 발생되는 부하 정보 저장 -->
+        <RollingFile name ="load_log_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/load_log</FileName>
+			<FilePattern>${env:MP_LOG_PATH}/load_log.%d{yyyy-MM-dd}</FilePattern>
+            <PatternLayout>
+                <Pattern>${serviceLayoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+        </RollingFile>	
+
+		<!-- pnu 검색 요청 시 로그 저장 -->
+        <RollingFile name ="search_log_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/search_log</FileName>
+			<FilePattern>${env:MP_LOG_PATH}/search_log.%d{yyyy-MM-dd}</FilePattern>
+            <PatternLayout>
+                <Pattern>${serviceLayoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+        </RollingFile>
+        
+        <!-- pnu 검색 요청 시 로그 저장 -->
+        <RollingFile name ="search_user_log_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/search_user_log</FileName>
+			<FilePattern>${env:MP_LOG_PATH}/search_user_log.%d{yyyy-MM-dd}</FilePattern>
+            <PatternLayout>
+                <Pattern>${serviceLayoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+        </RollingFile>	
+        	
+		
+		<!-- 서버 요청 로그 저장 -->
+        <RollingFile name ="req_log_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/req_log</FileName>
+			<FilePattern>${env:MP_LOG_PATH}/req_log.%d{yyyy-MM-dd-HH}</FilePattern>
+            <PatternLayout>
+                <Pattern>${serviceLayoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+        </RollingFile>	
+
+		<!-- 서버 요청 로그 저장 -->
+        <RollingFile name ="analysis_log_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/analysis_log</FileName>
+			<FilePattern>${env:MP_LOG_PATH}/analysis_log.%d{yyyy-MM-dd}</FilePattern>
+            <PatternLayout>
+                <Pattern>${serviceLayoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+        </RollingFile>			
+		
+		<!-- 파일 저장 정책 , 일단위로 파일 교체 되면서 로그 파일 저장 -->
+        <RollingFile name ="file_log_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/file_log</FileName>
+<!--             <FilePattern>${env:MP_LOG_PATH}/file_log.%d{yyyy-MM-dd-hh-mm}</FilePattern> -->
+			<FilePattern>${env:MP_LOG_PATH}/file_log.%d{yyyy-MM-dd}</FilePattern>
+            <PatternLayout>
+                <Pattern>${layoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${env:MP_LOG_PATH}" maxDepth="3">
+					<IfFileName glob="file_log*" />
+					<!--  3d, 2h, 1m -->
+					<IfLastModified age="5d" />
+				</Delete>
+			</DefaultRolloverStrategy>      
+        </RollingFile>
+
+        <RollingFile name ="service_log_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/service_log</FileName>
+            <FilePattern>${env:MP_LOG_PATH}/service_log.%d{yyyy-MM-dd}</FilePattern>
+            <PatternLayout>
+                <Pattern>${layoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${env:MP_LOG_PATH}" maxDepth="3">
+					<IfFileName glob="service_log*" />
+					<!--  3d, 2h, 1m -->
+					<IfLastModified age="5d" />
+				</Delete>
+			</DefaultRolloverStrategy>                
+        </RollingFile>
+
+        <RollingFile name ="geotools_RollingFile">
+            <FileName>${env:MP_LOG_PATH}/geotools_log</FileName>
+            <FilePattern>${env:MP_LOG_PATH}/geotools_log.%d{yyyy-MM-dd}</FilePattern>
+            <PatternLayout>
+                <Pattern>${layoutPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+            </Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${env:MP_LOG_PATH}" maxDepth="3">
+					<IfFileName glob="geotools_log" />
+					<!--  3d, 2h, 1m -->
+					<IfLastModified age="5d" />
+				</Delete>
+			</DefaultRolloverStrategy>                
+        </RollingFile>
+
+		
+	</Appenders>
+	<!-- additivity : 동인한 Appender 에 대한 중복 로그 방지 TRACE < DEBUG < INFO < WARN 
+		< ERROR -->
+	<loggers>
+		<!-- 모든 로그는 dubug레벨 이상일때만 찍고 -->
+		<root level="error" additivity="false">
+			<AppenderRef ref="console" />
+		</root>
+		
+		
+		<logger name="load_log" level="debug" additivity="false">
+			<appender-ref ref="load_log_RollingFile" />
+		</logger>		
+
+		<logger name="search_log" level="debug" additivity="false">
+			<appender-ref ref="search_log_RollingFile" />
+		</logger>
+		
+		<logger name="search_user_log" level="debug" additivity="false">
+			<appender-ref ref="search_user_log_RollingFile" />
+		</logger>		
+
+		<logger name="req_log" level="debug" additivity="false">
+			<appender-ref ref="req_log_RollingFile" />
+		</logger>
+		
+		<logger name="analysis_log" level="debug" additivity="false">
+			<appender-ref ref="analysis_log_RollingFile" />
+		</logger>		
+		
+		<!-- 파일 로그 -->
+		<logger name="file_log" level="debug" additivity="false">
+			<appender-ref ref="file_log_RollingFile" />
+			<AppenderRef ref="console" />
+		</logger>
+		
+		<!-- 서비스 관련 로그 -->
+		<logger name="service_log" level="debug" additivity="false">
+			<appender-ref ref="service_log_RollingFile" />
+			<AppenderRef ref="console" />
+		</logger>
+		
+		<logger name="org.geotools" level="debug" additivity="false">
+			<AppenderRef ref="geotools_RollingFile" />
+			
+            <!-- <AppenderRef ref="console" />  -->
+        </logger>
+
+	</loggers>
+
+</configuration>

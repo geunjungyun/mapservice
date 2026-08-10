@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><Capabilities xmlns="http://www.opengis.net/wmts/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/wmts/1.0 http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd">
+	<!-- Service Identification -->
+	<ows:ServiceIdentification>
+		<ows:Title>부동산지도서비스</ows:Title>
+		<ows:ServiceType>OGC WMTS</ows:ServiceType>
+		<ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+	</ows:ServiceIdentification>
+	<!-- Operations Metadata -->
+	<ows:OperationsMetadata>
+		<ows:Operation name="GetCapabilities">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get xlink:href="http://192.168.100.59:8070/ver1/mapservice?SERVICE">
+						<ows:Constraint name="GetEncoding">
+							<ows:AllowedValues>
+								<ows:Value>RESTful</ows:Value>
+							</ows:AllowedValues>
+						</ows:Constraint>
+					</ows:Get>
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+		<ows:Operation name="GetTile">
+			<ows:DCP>
+				<ows:HTTP>
+					<ows:Get xlink:href="http://192.168.100.59:8070/ver1/mapservice/">
+						<ows:Constraint name="GetEncoding">
+							<ows:AllowedValues>
+								<ows:Value>RESTful</ows:Value>
+							</ows:AllowedValues>
+						</ows:Constraint>
+					</ows:Get>
+				</ows:HTTP>
+			</ows:DCP>
+		</ows:Operation>
+	</ows:OperationsMetadata>
+	<Contents>
+	<Layer>
+		<ows:Title>emap/emp01</ows:Title>
+		<ows:Identifier>emap/emp01</ows:Identifier>
+		<ows:BoundingBox crs="urn:ogc:def:crs:EPSG::5179">
+			<ows:LowerCorner>-160477 1328422</ows:LowerCorner>
+			<ows:UpperCorner>2372590 2962987</ows:UpperCorner>
+		</ows:BoundingBox>
+		<Style isDefault="true">
+			<ows:Title>Default Style</ows:Title>
+			<ows:Identifier>default</ows:Identifier>
+		</Style>
+		<Format>image/png</Format>
+		<TileMatrixSetLink>
+			<TileMatrixSet>EPSG:5179</TileMatrixSet>
+		</TileMatrixSetLink>
+		<ResourceURL format="image/png" resourceType="tile" template="http://192.168.100.59:8070/ver1/mapservice?req=tile&amp;path=emap/emp01/{TileMatrix}/{TileCol}/{TileRow}.png"/>
+	</Layer>
+		
+	<!--TileMatrixSet -->
+		
+    <TileMatrixSet>
+      <ows:Identifier>EPSG:5179</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:EPSG::5179</ows:SupportedCRS>
+
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>7460571.42857143</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>7</MatrixWidth>
+        <MatrixHeight>7</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>2</ows:Identifier>
+        <ScaleDenominator>3730285.71428571</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>14</MatrixWidth>
+        <MatrixHeight>15</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>3</ows:Identifier>
+        <ScaleDenominator>1865142.85714286</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>30</MatrixWidth>
+        <MatrixHeight>30</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>4</ows:Identifier>
+        <ScaleDenominator>932571.428571429</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>60</MatrixWidth>
+        <MatrixHeight>60</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>5</ows:Identifier>
+        <ScaleDenominator>466285.714285714</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>120</MatrixWidth>
+        <MatrixHeight>120</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>6</ows:Identifier>
+        <ScaleDenominator>233142.857142857</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>240</MatrixWidth>
+        <MatrixHeight>240</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>7</ows:Identifier>
+        <ScaleDenominator>116571.428571429</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>480</MatrixWidth>
+        <MatrixHeight>480</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>8</ows:Identifier>
+        <ScaleDenominator>58285.7142857143</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>958</MatrixWidth>
+        <MatrixHeight>956</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>9</ows:Identifier>
+        <ScaleDenominator>29142.8571428571</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>1916</MatrixWidth>
+        <MatrixHeight>1916</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>10</ows:Identifier>
+        <ScaleDenominator>14571.4285714286</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>3832</MatrixWidth>
+        <MatrixHeight>3832</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>11</ows:Identifier>
+        <ScaleDenominator>7285.71428571429</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>7665</MatrixWidth>
+        <MatrixHeight>7665</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>12</ows:Identifier>
+        <ScaleDenominator>3642.85714285714</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>15330</MatrixWidth>
+        <MatrixHeight>15330</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>13</ows:Identifier>
+        <ScaleDenominator>1821.42857142857</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>30660</MatrixWidth>
+        <MatrixHeight>30660</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>14</ows:Identifier>
+        <ScaleDenominator>910.714285714286</ScaleDenominator>
+        <TopLeftCorner>-200000.0 4000000.0</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>61320</MatrixWidth>
+        <MatrixHeight>61320</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>		
+
+	</Contents>
+	<ServiceMetadataURL xlink:href="http://192.168.60.213:8070/ver1/mapservice?SERVICE"/>
+</Capabilities>

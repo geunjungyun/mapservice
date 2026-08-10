@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"> 	
+
+	<xs:element name="levelId" type="xs:int" />
+	<xs:complexType name="resource">
+    	<xs:sequence>
+    		<xs:element name="symbolInfoName" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+    		<xs:element name="fontInfoName" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+    		<xs:element name="symbols" type="file" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    		<xs:element name="fonts" type="file" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="file">
+    	<xs:sequence>
+    		<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+    		<xs:element name="binary" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+	
+	<xs:element name="styles" type="styles"></xs:element>
+	<xs:complexType name="styles">
+		<xs:annotation>
+			<xs:documentation>스타일 정보를 담고 있는 최상위 엘리먼트</xs:documentation>
+		</xs:annotation>
+		
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="0">
+			<xs:annotation><xs:documentation>스타일 이름</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="update" type="xs:string" maxOccurs="1" minOccurs="0">
+			<xs:annotation><xs:documentation>업데이트 날짜</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="unbounded" ref="polygonStyle" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" ref="polylineStyle" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" ref="pointStyle" />
+			
+			<xs:element name="resource" type="resource" maxOccurs="1" minOccurs="0"></xs:element>
+			
+			<xs:element name="lineIntervalPixel" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation><xs:documentation>
+				라인 주기의 경우 반복시 이전 주기와 다음 주기 간에 라인 상의 픽셀 거리
+				기본 값 
+				</xs:documentation></xs:annotation>
+			</xs:element>
+			
+			<xs:element name="lineExtensionWidthRatio" type="xs:float" minOccurs="0" maxOccurs="1">
+				<xs:annotation><xs:documentation>
+				주기 거리를 가상으로 늘려서 반복 회수를 줄이기 위한 설정
+				값 범위 : 0.0 ~ 1.0, ex)0.0-> 주기 라인을 늘리지 않음, 1.0 -> 주기 라인의 길이를 2 배 늘려서 배치함.
+				기본 값 
+				</xs:documentation></xs:annotation>
+			</xs:element>
+			
+			<xs:element name="symbolPath" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation><xs:documentation>
+				디폴트 심볼 디렉토리에 존재하는 하위 디렉토리 이름.  	
+				</xs:documentation></xs:annotation>
+			</xs:element>
+			
+			
+			
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="name" type="xs:string" />
+	<xs:element name="desc" type="xs:string" />	
+	<xs:element name="width" type="xs:float" />
+	<xs:element name="fieldName" type="xs:NCName">
+		<xs:annotation>
+			<xs:documentation>데이타 값을 참조하기 위한 필드 이름</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="value" type="xs:NMTOKEN" />
+	<xs:element name="styleName" type="xs:string" />
+	
+	
+	<xs:element name="polygonStyle">
+		<xs:annotation>
+			<xs:documentation>폴리곤 형태의 공간 객체를 그리기 위한 스타일</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="drawOrder" type="xs:string"></xs:element>
+				<xs:element ref="name">
+					<xs:annotation>
+						<xs:documentation>스타일 이름</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="desc">
+					<xs:annotation>
+						<xs:documentation>스타일 설명</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="lineStyle">
+					<xs:annotation>
+						<xs:documentation>라인을 그리기 위한 스타일 정보</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="fillStyle">
+					<xs:annotation>
+						<xs:documentation>형상을 체우기 위한 스타일 정보</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="query" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="polylineStyle">
+		<xs:annotation>
+			<xs:documentation>폴리라인 공간 데이타를 그리기 위한 스타일 정보</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="drawOrder" type="xs:string"></xs:element>
+				<xs:element ref="name">
+					<xs:annotation>
+						<xs:documentation>스타일 이름</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="desc">
+					<xs:annotation>
+						<xs:documentation>스타일 설명</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="lineStyle">
+					<xs:annotation>
+						<xs:documentation>라인을 그리기 위한 스타일</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="fillStyle">
+					<xs:annotation>
+						<xs:documentation>형상을 체우기 위한 스타일 정보</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="query" />
+
+			</xs:sequence>
+
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="pointStyle">
+		<xs:annotation>
+			<xs:documentation>포인트 공간 객체를 그리기 위한 스타일 정보</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="drawOrder" type="xs:string"></xs:element>
+				<xs:element ref="desc">
+					<xs:annotation>
+						<xs:documentation>스타일 설명</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="name">
+					<xs:annotation>
+						<xs:documentation>스타일 이름</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="priority">
+					<xs:annotation>
+						<xs:documentation>우선 순위</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="positionType"></xs:element>
+
+				<xs:element minOccurs="0" ref="markStyle" />
+				<xs:element minOccurs="0" ref="symbolStyle" />
+				<xs:element minOccurs="0" ref="textStyle" />
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="query" />
+				
+				<xs:element name="tr" type="xs:string"></xs:element>
+				<xs:element name="transparency" type="xs:int"></xs:element>
+				<xs:element name="shapeDraw" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="overlapConfig" minOccurs="0" maxOccurs="1"></xs:element>
+				<xs:element name="offsetX" type="xs:int" maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>디바이스 좌표계(좌상단 원점) 기준으로 픽셀 단위로 이동, 우측은(+), 좌측은(-) </xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="offsetY" type="xs:int" maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>디바이스 좌표계(좌상단 원점) 기준으로 픽셀 단위로 이동, 상측은 (-), 하측는(+) </xs:documentation>
+					</xs:annotation>
+				</xs:element>				
+				<xs:element name="grid" type="xs:int"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="overlapConfig">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="extensionArea" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation><xs:documentation>
+					겹침 처리 대상 영역을 extensionArea 값 만큼 넓히거나 줄여서 영역을 계산함
+				</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="deleteOverlapMode" type="deleteOverlapMode" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<xs:simpleType name ="deleteOverlapMode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OnlyStyle">
+				<xs:annotation><xs:documentation>
+				현재 스타일로 정의 된 그룹하고만 겹침 처리를 한다. ex) 반투명 행정동 경계
+				</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="AllLStyle">
+				<xs:annotation><xs:documentation>
+				AllStyle로 정의된 그룹하고만 겹침 처리를 한다.
+				</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="NotDelete">
+				<xs:annotation><xs:documentation>
+				현재 스타일로 정의 된 그룹은 겹침 처리를 하지 않는다. ex) 지하철 출구
+				</xs:documentation></xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	
+	
+	<xs:element name="positionType" type="xs:NCName">
+		<xs:annotation> 
+			<xs:documentation>mark, symbol, text 의 정렬 정보. x : 안그림. c: 센터, b : 아래, t : 위, l : 왼쪽, r : 오른쪽</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:element name="markStyle">
+		<xs:annotation>
+			<xs:documentation>포인트 위치에 마커를 그린다.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="color" />
+				<xs:element ref="size" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="size" type="xs:int">
+		<xs:annotation>
+			<xs:documentation>픽셀 크기</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+
+	<xs:element name="symbolStyle">
+		<xs:annotation>
+			<xs:documentation>심볼을 그리는 스타일 정보</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="fieldName" />
+				<xs:element ref="symbolName" />
+				<xs:element name="symbolPath" type="xs:string" minOccurs="0" maxOccurs="1" >
+				<xs:annotation><xs:documentation>글자 회전 각도 값 범위 : 0 ~ 360</xs:documentation></xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="symbolName" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>심볼이름(확장자 포함)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+
+	<xs:element name="textStyle">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="rotate" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation><xs:documentation>글자 회전 각도 값 범위 : 0 ~ 360</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="rotateField" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation><xs:documentation>글자 회전 각도 값이 들어 있는 레이어의 필드 이름</xs:documentation></xs:annotation>
+				</xs:element>
+	 			<xs:element name="multiLineSize" type="xs:int" minOccurs="0" maxOccurs="1">
+	 			<xs:annotation><xs:documentation>하나의 줄에 최대로 존재할 수 있느 글자 개수</xs:documentation></xs:annotation>
+	 			</xs:element>
+				<xs:element ref="multiLine" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="fontName" />
+				
+				<xs:element ref="fontType" />
+				<xs:element ref="fontSize" />
+				<xs:element ref="lineStyle" />
+				<xs:element ref="fillStyle" />
+				<xs:element ref="fieldName"/>
+				
+				<xs:element name="tracking" type="xs:float" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+					글자의 중심선을 기준으로 자간 간격 처리, 
+					글자 크기에 비례하여 간격을 설정.
+					0.1 부터 0.3 값이 추전 값이며 1인 경우는 글자크기와 동일한 간격이 적용됨
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="kerning" type="xs:boolean" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>글자의 외형에 따라 글자사이 거리를 조절하는 것</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="ligature" type="xs:boolean" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>이음자</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="linespace" type="xs:float" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+					글자의 중심선을 기준으로 자간 간격 처리, 
+					글자 크기에 비례하여 간격을 설정.
+					0.1 부터 0.3 값이 추전 값이며 1인 경우는 글자크기와 동일한 간격이 적용됨
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="widthRatio" type="xs:float" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+					장평
+					0.0 ~ 0.9 글자폭이 줄어듬, 1.1 ~ 2.0 글자폭이 늘어남.
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				
+			    <xs:element name="lineIntervalPixel" type="xs:int" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+					라인 주기의 경우 반복시 이전 주기와 다음 주기 간에 라인 상의 픽셀 거리
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				
+				<xs:element name="lineExtensionWidthRatio" type="xs:float" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+					주기 거리를 가상으로 늘려서 반복 회수를 줄이기 위한 설정
+					값 범위 : 0.0 ~ 1.0, ex)0.0-> 주기 라인을 늘리지 않음, 1.0 -> 주기 라인의 길이를 2 배 늘려서 배치함. 
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				
+				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="multiLine">
+		<xs:annotation>
+			<xs:documentation>멀티 라인 표현을 위한 설정</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- <xs:element name="enable" type="xs:boolean" maxOccurs="1" minOccurs="1"></xs:element>-->
+				<xs:element name="lineMaxSize" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation><xs:documentation>하나의 줄에 최대로 존재할 수 있느 글자 개수</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="separateString" type="xs:string" maxOccurs="unbounded" minOccurs="0">
+				<xs:annotation><xs:documentation>특정 String이 존재할 경우 줄바꿈을 한다.</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="isSeparateUnicode" type="xs:boolean" maxOccurs="1" minOccurs="0">
+					<xs:annotation><xs:documentation>안쓰는 값</xs:documentation></xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="fontName" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>폰트 이름</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fontType">
+		<xs:simpleType>
+			<xs:restriction base="xs:NCName">
+				<xs:enumeration value="BOLD"></xs:enumeration>
+				<xs:enumeration value="PLAIN"></xs:enumeration>
+				<xs:enumeration value="ITALIC"></xs:enumeration>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="fontSize" type="xs:float">
+		<xs:annotation>
+			<xs:documentation>폰트 사이즈</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:element name="query">
+		<xs:annotation>
+			<xs:documentation>같은 레이어에 존재하는 객체를 조건으로 선택하여 다른 스타일 정보로 그리기 위한 정보
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="name">
+					<xs:annotation>
+						<xs:documentation>조건을 비교하기 위한 컬럼 이름</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="value">
+					<xs:annotation>
+						<xs:documentation>조건을 비교하기 위한 해당 컬럼의 값</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" ref="styleName">
+					<xs:annotation>
+						<xs:documentation>스타일 이름</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="overlapConfig" minOccurs="0" maxOccurs="1">
+				</xs:element>
+				<xs:element ref="priority" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>그리기 위한 우선 순위로 후순위이고 겹칠 경우 그리지 않는다.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+		<xs:element name="lineStyle">
+		<xs:annotation>
+			<xs:documentation>라인을 그리기 위한 스타일 정보(Point 일 경우 텍스트를 그리기 위한 스타일)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="width">
+					<xs:annotation>
+						<xs:documentation>라인 두께</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="color" />
+				<xs:element ref="transparency" />
+				<xs:element name="type" type="linePatten" maxOccurs="1" minOccurs="0" />
+				<xs:element name="pattern" type="xs:string">
+				 	<xs:annotation><xs:documentation>라입의 패턴으로 채울 이미지 이름</xs:documentation></xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="linePatten">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="normal" />
+			<xs:enumeration value="arrow" />
+			<xs:enumeration value="dash" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="fillStyle">
+		<xs:annotation>
+			<xs:documentation>형상의 내부를 칠하기 위한 정보</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+			
+				<xs:element ref="color" />
+				<xs:element ref="transparency" />
+				<xs:element name="texturePattern" type="xs:string" >
+				<xs:annotation><xs:documentation>형태 내부를 패턴 형태로 채우기 위한 이미지 이름</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="width" type="xs:float" />
+				<xs:element name="hatchPattern" type="hatchPattern" maxOccurs="1" minOccurs="0" ></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="hatchPattern">
+		<xs:annotation>
+			<xs:documentation>빗금 그리기</xs:documentation>
+		</xs:annotation>
+			<xs:sequence>
+				<xs:element ref="color" />
+				<xs:element ref="transparency" />
+				<xs:element name="lineWidth" type="xs:float" />
+				<xs:element name="Width" type="xs:int" />
+				<xs:element name="type" type="hatchType" maxOccurs="1" minOccurs="1"/>
+			</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="hatchType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="horizontal" />
+			<xs:enumeration value="vertical" />
+			<xs:enumeration value="diagonal" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="priority" type="xs:int">
+		<xs:annotation>
+			<xs:documentation>그림을 그리는 우선 순위</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="color" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>칼라 색 Red/Green/Blue</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="transparency">
+		<xs:annotation>
+			<xs:documentation>투명도</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:int">
+				<xs:minInclusive value="0"></xs:minInclusive>
+				<xs:maxInclusive value="100"></xs:maxInclusive>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	
+	<xs:element name="mapInfo" type="mapInfo"></xs:element>
+	<xs:complexType name="mapInfo">
+		<xs:sequence>
+			<xs:element name="mbr" type="mbr"></xs:element>
+			<xs:element name="name" type="xs:string"></xs:element>
+			<xs:element name="desc" type="xs:string"></xs:element>
+			<xs:element name="scaleInfos" type="scaleInfos"></xs:element>
+			<xs:element name="backgroundColor" type="xs:string"></xs:element>
+			<xs:element name="levelConfigs" type="levelConfigs" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="stylesName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="update" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<!-- <xs:element name="backgroundTileMapService" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>-->
+			<xs:element name="backgroundTileMapService" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element name="mbrExtend" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>			<xs:element name="tileSize" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="scaleInfos">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="scaleInfo" type="scaleInfo" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="scaleInfo">
+		<xs:sequence>
+			<xs:element name="id" type="xs:int"></xs:element>
+			<xs:element name="pixelPerMeter" type="xs:double"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="mbr">
+		<xs:sequence>
+			<xs:element name="minx" type="xs:double"></xs:element>
+			<xs:element name="miny" type="xs:double"></xs:element>
+			<xs:element name="maxx" type="xs:double"></xs:element>
+			<xs:element name="maxy" type="xs:double"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="levelConfigs">
+		<xs:annotation>
+			<xs:documentation>레벨들의 정보</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" ref="levelConfig" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="levelConfig">
+		<xs:annotation>
+			<xs:documentation>하나의 레벨 정보로 정의된 레벨에서 표현되는 레이어와 스타일 정보를 정의한다.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="levelId">
+					<xs:annotation>
+						<xs:documentation>레벨 아이디</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="unbounded" ref="layerInfo" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="layer">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="layerName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+				<xs:element name="imageLayer" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="layerInfo">
+		<xs:annotation>
+			<xs:documentation>레이어 표출 정보</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+<!-- 				<xs:element ref="layerName" /> -->
+<!-- 				<xs:element ref="selectStyleName" /> -->
+<!-- 				<xs:element ref="drawOrder" /> -->
+				<xs:element name="layerName" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation><xs:documentation>레이어 이름</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="selectStyleName" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation><xs:documentation>스타일 이름</xs:documentation></xs:annotation>
+				</xs:element>
+				<xs:element name="drawOrder" type="xs:float" maxOccurs="1" minOccurs="0">
+				<xs:annotation><xs:documentation>그리는 순서. 작은 값 부터 먼저 그림</xs:documentation></xs:annotation>
+				</xs:element>
+<!-- 			<xs:element name="imageLayer" type="imageLayer" maxOccurs="1" minOccurs="0"></xs:element> -->
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="layerName" type="xs:NCName">
+		<xs:annotation>
+			<xs:documentation>레이어 이름</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="selectStyleName" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>스타일 이름</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="drawOrder" type="xs:int">
+		<xs:annotation>
+			<xs:documentation>레이어를 그리는 순서로 작을 수록 먼저 그린다.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType name="makeTile">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"></xs:element>
+			<xs:element name="desc" type="xs:string"></xs:element>
+			<xs:element name="jobTile" type="jobTile" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="jobTile" type="jobTile"></xs:element>
+	<xs:complexType name="jobTile">
+		<xs:sequence>
+			<xs:element name="run" type="xs:boolean"></xs:element>
+			<xs:element name="priority" type="xs:int"></xs:element>
+			<xs:element name="name" type="xs:string"></xs:element>
+			<xs:element name="desc" type="xs:string"></xs:element>
+			<xs:element name="tileMapServiceName" type="xs:string"></xs:element>
+			<xs:element name="levelSet" type="levelSet" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element name="threadCnt" type="xs:int"></xs:element>
+			<xs:element name="drawCanvasRatio" type="xs:int" maxOccurs="1" minOccurs="0" ></xs:element>
+			<xs:element name="distribute" type="distribute" maxOccurs="1" minOccurs="0" ></xs:element>
+			<xs:element name="update" type="xs:boolean" maxOccurs="1" minOccurs="0" ></xs:element>
+			<xs:element name="crs" type="xs:string" maxOccurs="1" minOccurs="0" ></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="levelSet">
+		<xs:sequence>
+			<xs:element name="startLevel" type="xs:int"></xs:element>
+			<xs:element name="endLevel" type="xs:int"></xs:element>
+			<xs:element name="mbr" type="mbr" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element name="run" type="xs:boolean"></xs:element>
+			<xs:element name="priority" type="xs:int"></xs:element>
+			<xs:element name="umdName" type="xs:string"></xs:element>
+		</xs:sequence>
+	</xs:complexType>  
+
+	<xs:complexType name="distribute">
+		<xs:sequence>
+			<xs:element name="storageServerIp" type="xs:string" maxOccurs="1" minOccurs="1" ></xs:element>
+			<xs:element name="tileServerIp" type="xs:string" maxOccurs="unbounded" minOccurs="0" ></xs:element>
+		</xs:sequence>
+	</xs:complexType>	  
+</xs:schema>
