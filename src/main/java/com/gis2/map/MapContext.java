@@ -765,8 +765,13 @@ public class MapContext implements Context{
 //			
 //			if(  !(layerTemp.getName().indexOf("tn_rodway_bndry") > -1) ) {
 //				continue;
-//			}			
-//			System.out.println("layerTemp.getName()=" + layerTemp.getName() +", style Name = " + styleName);
+//			}
+			
+			//if(layerTemp.getName().startsWith("tn_rodway_ctln_8")) {
+			//	System.out.println("layerTemp.getName()=" + layerTemp.getName() +", style Name = " + styleName);	
+			//}
+			
+			
 			
 //			if(  (layerTemp.getName().indexOf("tn_arrfc") > -1) ) {
 //				continue;

@@ -48,12 +48,12 @@
         },
         {
             "type": "java",
-            "name": "Run Oper emap2",
+            "name": "Run Oper kmp",
             "request": "launch",
             "mainClass": "Oper",
             "projectName": "MapService",
             "args": [
-                "D:\\workspace3\\mapservice\\map_service\\emap2.properties"
+                "D:\\workspace3\\mapservice\\map_service\\kmp.properties"
             ]
         },
         {

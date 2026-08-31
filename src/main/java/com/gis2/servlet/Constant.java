@@ -17,6 +17,7 @@ public class Constant {
 	public static String roadIntersection = "road_intersection";
 	public static String layersSave = "layers_save";
 	public static String slope = "slope";
+	public static String layerList = "layerlist";
 	
 	
 	public static String users = "users";

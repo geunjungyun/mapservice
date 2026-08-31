@@ -203,8 +203,11 @@ public class Oper {
 
 	boolean newMode = false;
 
+	// true 이면 layers / layers_ 에 이미 저장된 FileLayer 는 다시 저장하지 않고 건너뛴다.
+	boolean saveLayerSkipExist = false;
+
 	/**
-	 * 
+	 *
 	 * polygon
 	 * 
 	 * layerName + seper + shape + seper + 엑셀순번
@@ -586,7 +589,7 @@ public class Oper {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		long st = System.currentTimeMillis();
 		Oper op = new Oper();
 		Properties property = new Properties();
 		File path = new File(args[0]);
@@ -789,6 +792,13 @@ public class Oper {
 				op.newMode = true;
 			}
 
+			// 이미 저장된 FileLayer(layers/layers_)는 다시 저장하지 않는 옵션 (기본 false = 덮어씀)
+			String layerSaveSkipExist = property.getProperty("layerSaveSkipExist", "");
+			LOG.debug("layerSaveSkipExist=" + layerSaveSkipExist);
+			if (layerSaveSkipExist != null && layerSaveSkipExist.trim().equals("true")) {
+				op.saveLayerSkipExist = true;
+			}
+
 			String fontPath = property.getProperty("fontPath");
 			if (fontPath != null && fontPath.length() > 0) {
 				StorageMng.fontPath = fontPath;
@@ -802,23 +812,23 @@ public class Oper {
 			if (makeServiceInfo.equals("true")) {
 				if (op.newMode) {
 					new GisStyleExcelTool.Importer(op.excelpath).run(op.dstPath);
-
+					//op.readEmapServiceInfo(false);
+					//op.saveEmapServiceInfo(false);
 				}
 			}
-
 			
 			if (makeLayer.equals("true")) {
 
 				if (op.newMode) {
-
+					
 					op.readEmapServiceInfo(false);
-
-					op.saveEmapServiceInfo();
+					
+					op.saveEmapServiceInfo(true);
+					
 				} else {
 					op.makeLayers();
 				}
 			}
-
 			
 			if (makeServiceInfo.equals("true")) {
 				if (!op.newMode) {
@@ -849,6 +859,9 @@ public class Oper {
 			e.printStackTrace();
 			LOG.debug(e.toString(), e);
 		}
+		long et = System.currentTimeMillis();
+		
+		System.out.println("job time = " + (et-st)/1000);
 		System.exit(0);
 	}
 
@@ -892,10 +905,16 @@ public class Oper {
 		}
 	}
 
-	public void saveEmapServiceInfo() {
+	public void saveEmapServiceInfo(boolean save) {
 
 		boolean layerSave = true;
 		boolean processSave = true;
+		
+		
+		if(!save) {
+			layerSave = false;
+			processSave = false;
+		}
 
 		String layersPath = dstPath + File.separator + "layers";
 
@@ -1232,7 +1251,7 @@ public class Oper {
 
 						JobInfo remove = jobInfos.remove(idx);
 
-						System.out.println("remove jobInfo = " + remove.saveLayerFile);
+						//System.out.println("remove jobInfo = " + remove.saveLayerFile);
 					}
 
 					jobInfos.add(jobInfo);
@@ -1259,6 +1278,14 @@ public class Oper {
 			for (JobInfo jobInfo : jobInfos) {
 				System.out.println("saveLayerFile" + jobInfo.saveLayerFile + ", simpleValue=" + jobInfo.simpleValue
 						+ ", gridValue=" + jobInfo.gridValue);
+
+				// 이미 저장된 FileLayer 이면 건너뛴다 (layerSaveSkipExist=true 일 때)
+				if (this.saveLayerSkipExist
+						&& new File(jobInfo.saveLayerFile.getAbsolutePath() + File.separator + "layerInfo.xml")
+								.exists()) {
+					System.out.println("이미 존재하여 저장 생략(layers_): " + jobInfo.saveLayerFile.getAbsolutePath());
+					continue;
+				}
 
 				Future ft = executorService.submit(() -> {
 
@@ -1712,6 +1739,12 @@ public class Oper {
 		// 저장할 FileLayer 이름 설정
 		String cleanShpName = FilenameUtils.getBaseName(shpFile.getName());
 		String dstPath = dstDirPath + File.separator + cleanShpName;
+
+		// 이미 저장된 FileLayer 이면 건너뛴다 (layerSaveSkipExist=true 일 때)
+		if (this.saveLayerSkipExist && new File(dstPath + File.separator + "layerInfo.xml").exists()) {
+			System.out.println("이미 존재하여 저장 생략(layers): " + dstPath);
+			return;
+		}
 
 		ShapeFile shp = null;
 		FileLayer dstLayer = null;

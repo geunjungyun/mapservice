@@ -358,7 +358,7 @@ public class MapService extends HttpServlet {
 
 		boolean authResult = true;
 
-		if (AuthorityMng.isAuthority && !req.equals(Constant.tiles)) {
+		if (AuthorityMng.isAuthority && !req.equals(Constant.tiles) && !req.equals(Constant.layerList)) {
 			authResult = AuthorityMng.isOK(keyS, req, tileNameS, layerS, domain, header);
 		}
 
@@ -1456,8 +1456,14 @@ public class MapService extends HttpServlet {
 			
 			System.out.println("time = " +(ed -st)/1000.0+", size="+json.length()/1024/1024 +" m"+", area = " + geo.getArea());
 		}
-		
-		
+		else if (req.equals(Constant.layerList)) {
+			// 직사각형(mbr) + levelId 로, 그 영역·레벨에서 실제 그려지는 레이어/스타일 목록 반환.
+			// 판정은 drawMap 과 동일: MBR 피처 존재(loadMemLayers) + CQL/조건분기(getQueryStyle/getCql).
+			// 단, TileMapFactory2.getMapData() 가 com.gis2.map.MapData 인 경우에만 지원한다.
+			json = this.getLayerList(request, header);
+		}
+
+
 		if (req.equals(Constant.tile) && pt.getHeader().getResult().equals("0000")) {
 
 		} else {
@@ -1846,6 +1852,212 @@ public class MapService extends HttpServlet {
 	public void destroy() {
 		super.destroy(); // Just puts "destroy" string in log
 		// Put your code here
+	}
+
+	/**
+	 * 직사각형(mbr) + levelId 영역에서 실제 그려지는 (레이어명, 스타일명) 목록을 JSON 으로 반환.
+	 * 판정 기준은 drawMap 과 동일: MBR 내 피처 존재(loadMemLayers) + 스타일 조건(CQL/조건분기) 평가.
+	 * TileMapFactory2.getMapData() 가 com.gis2.map.MapData 인 경우에만 지원한다.
+	 */
+	public String getLayerList(HttpServletRequest request, Header header) {
+
+		JSONObject resultJson = new JSONObject();
+		JSONArray arr = new JSONArray();
+
+		String version = request.getParameter(Constant.tileSet);
+		String tileName = request.getParameter(Constant.tileName);
+		String levelIdS = request.getParameter("levelId");
+		String mbr = request.getParameter("mbr");
+
+		int levelId = -1;
+		double minx = 0, miny = 0, maxx = 0, maxy = 0;
+		boolean paramOk = (version != null && tileName != null && levelIdS != null && mbr != null);
+		if (paramOk) {
+			try {
+				levelId = Integer.parseInt(levelIdS.trim());
+				String[] c = mbr.split(",");
+				minx = Double.parseDouble(c[0].trim());
+				miny = Double.parseDouble(c[1].trim());
+				maxx = Double.parseDouble(c[2].trim());
+				maxy = Double.parseDouble(c[3].trim());
+			} catch (Exception e) {
+				paramOk = false;
+			}
+		}
+
+		if (!paramOk) {
+			header.setResult("9001");
+			header.setResultDesc("필수 파라미터 누락/형식오류 (tileSet, tileName, levelId, mbr)");
+		} else {
+			com.gis2.storage.Version ver = TileServiceMng.versions.get(version);
+			TileMapFactory2 tmf = (ver != null) ? ver.getTileMapFactory(tileName) : null;
+			com.gis.map.MData md = (tmf != null) ? tmf.getMapData() : null;
+
+			if (md == null) {
+				header.setResult("9002");
+				header.setResultDesc("존재하지 않는 tileSet/tileName : " + version + "/" + tileName);
+			} else if (!(md instanceof com.gis2.map.MapData)) {
+				header.setResult("9003");
+				header.setResultDesc("지원하지 않는 파이프라인(com.gis2.map.MapData 아님)");
+			} else {
+				com.gis2.map.MapData md2 = (com.gis2.map.MapData) md;
+				com.gis.map.Context ctxObj = md2.getMapContext(levelId);
+
+				if (ctxObj instanceof com.gis2.map.MapContext) {
+					com.gis2.map.MapContext mc = (com.gis2.map.MapContext) ctxObj;
+					Envelope env = new Envelope(minx, maxx, miny, maxy);
+					com.gis.projection.ScreenCoordUtil scu = new com.gis.projection.ScreenCoordUtil(
+							new java.awt.Dimension(512, 512), env);
+
+					// 실제 지오메트리 교차 검사를 위한 MBR 사각형 폴리곤
+					Geometry mbrPoly = new GeometryFactory().toGeometry(env);
+
+					// loadMemLayers: MBR 로 피처를 로드하고, 피처 0건 레이어는 스스로 제외한다.
+					java.util.Vector<com.gis.map.Layer> layers = mc.loadMemLayers(env, scu);
+
+					java.util.LinkedHashSet<String> seen = new java.util.LinkedHashSet<String>();
+
+					if (layers != null) {
+						for (com.gis.map.Layer ly : layers) {
+							if (!(ly instanceof com.gis2.map.VectorLayer)) {
+								continue;
+							}
+							com.gis2.map.VectorLayer vl = (com.gis2.map.VectorLayer) ly;
+							String layerName = vl.getName();
+							ListFeatureCollection feats = vl.getFeatures();
+							if (feats == null || feats.size() == 0) {
+								continue;
+							}
+							int styleCnt = vl.getStyleCnt();
+
+							for (int m = 0; m < styleCnt; m++) {
+								com.gis2.map.style.BasicStyleExtend bs = (com.gis2.map.style.BasicStyleExtend) vl
+										.getStyle(m);
+								if (bs == null) {
+									continue;
+								}
+
+								String parentName = bs.getName();
+								boolean isBranch = (bs.getQuerys() != null && bs.getQuerys().size() > 0);
+
+								// 이 스타일에서 나올 수 있는 이름들(조기 종료용)
+								java.util.HashSet<String> expected = new java.util.HashSet<String>();
+								if (isBranch) {
+									for (com.gis2.map.style.QueryStyle qs : bs.getQuerys()) {
+										if (qs.style != null) {
+											expected.add(qs.style.getName());
+										}
+									}
+								}
+								expected.add(parentName); // 조건 미매칭 시 부모 스타일로 그려지는 경우 대비
+								java.util.HashSet<String> foundForStyle = new java.util.HashSet<String>();
+
+								java.util.Iterator it = feats.iterator();
+								while (it.hasNext()) {
+									SimpleFeature feature = (SimpleFeature) it.next();
+
+									// bbox 질의로 넘어온 후보 중, 실제 지오메트리가 MBR 과 교차하는 것만 집계
+									Object geoObj = feature.getDefaultGeometry();
+									if (!(geoObj instanceof Geometry)) {
+										continue;
+									}
+									if (!mbrPoly.intersects((Geometry) geoObj)) {
+										continue;
+									}
+
+									// 레이어의 지오메트리 타입 (point / polyline / polygon)
+									String geomType = toGeomType((Geometry) geoObj);
+
+									java.util.Vector<com.gis2.map.style.QueryStyle> qss = bs.getQueryStyle(feature);
+									if (qss != null && qss.size() > 0) {
+										for (com.gis2.map.style.QueryStyle qs : qss) {
+											if (qs != null && qs.style != null) {
+												String childName = qs.style.getName();
+												if (foundForStyle.add(childName)) {
+													addLayerStyle(arr, seen, layerName, childName,
+															isBranch ? parentName : null, geomType);
+												}
+											}
+										}
+									} else {
+										// 단일 CQL 또는 조건 미매칭 fallthrough (drawMap 과 동일)
+										boolean isDraw = true;
+										if (bs.getCql() != null && bs.getCql().length() > 0) {
+											if (bs.filterValidate(feature.getFeatureType())) {
+												if (bs.getFilter() != null && !bs.getFilter().evaluate(feature)) {
+													isDraw = false;
+												}
+											}
+										}
+										if (isDraw) {
+											if (foundForStyle.add(parentName)) {
+												addLayerStyle(arr, seen, layerName, parentName, null, geomType);
+											}
+										}
+									}
+
+									// 이 스타일에서 가능한 이름을 모두 찾았으면 나머지 피처는 건너뛴다.
+									if (foundForStyle.containsAll(expected)) {
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		resultJson.put("result", header.getResult());
+		resultJson.put("resultDesc", header.getResultDesc());
+		resultJson.put("levelId", levelId);
+		resultJson.put("count", arr.length());
+		resultJson.put("layers", arr);
+		return resultJson.toString();
+	}
+
+	private void addLayerStyle(JSONArray arr, java.util.LinkedHashSet<String> seen, String layerName,
+			String styleName, String parentStyleName, String geomType) {
+		// 이름_{소숫점숫자} 형태(예: _1.5)의 접미어만 제거한다.
+		// 정수 접미어(_1, _10)는 그대로 유지한다.
+		if (layerName != null) {
+			layerName = layerName.replaceFirst("_[0-9]+\\.[0-9]+$", "");
+		}
+		String key = layerName + "|" + styleName;
+		if (!seen.add(key)) {
+			return;
+		}
+		JSONObject o = new JSONObject();
+		o.put("layerName", layerName);
+		o.put("styleName", styleName);
+		o.put("geomType", geomType);
+		if (parentStyleName != null && !parentStyleName.equals(styleName)) {
+			o.put("parentStyleName", parentStyleName);
+		}
+		arr.put(o);
+	}
+
+	/**
+	 * JTS Geometry 를 point / polyline / polygon 문자열로 분류한다.
+	 */
+	private String toGeomType(Geometry g) {
+		if (g == null) {
+			return "unknown";
+		}
+		String t = g.getGeometryType(); // Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon ...
+		if (t == null) {
+			return "unknown";
+		}
+		if (t.indexOf("Point") > -1) {
+			return "point";
+		}
+		if (t.indexOf("Line") > -1) {
+			return "polyline";
+		}
+		if (t.indexOf("Polygon") > -1) {
+			return "polygon";
+		}
+		return "unknown";
 	}
 
 	public void doTile(HttpServletRequest request, HttpServletResponse response) {

@@ -99,6 +99,23 @@ function init(){
     view.on('change:center', logCenterAndZoom);
 	view.on('change:resolution', logCenterAndZoom);
 	logCenterAndZoom();
+
+	// 지도 클릭 시 좌표 표시 (뷰 좌표계 = EPSG:5179, 경위도 = EPSG:4326)
+	map.on('singleclick', function(evt) {
+		const coord = evt.coordinate;
+		const x = coord[0].toFixed(2);
+		const y = coord[1].toFixed(2);
+
+		const lonlat = ol.proj.transform(coord, 'EPSG:5179', 'EPSG:4326');
+		const lon = lonlat[0].toFixed(6);
+		const lat = lonlat[1].toFixed(6);
+
+		const el = document.getElementById('clickCoord');
+		if (el) {
+			el.value = x + ',' + y;
+		}
+		console.log('클릭 좌표(5179):', x, y, ' / 경위도(4326):', lon, lat);
+	});
 }
 
 
@@ -142,8 +159,9 @@ function getTileList(){
 	    html+='레벨<input style="margin-top:5px; height:25px; width: 25px;" id="level" value="1"/><br>';
 	    html+='중심좌표<input style="margin-top:5px; height:25px; width: 150px;" id="coord" value="1"/><br>';	
 	    html+='<button style="margin-top:5px; height:25px; width: 200px;" onclick="moveToCenterAndZoom()">지도이동</button><br>';
-	    html+='영역<input style="margin-top:5px; height:25px; width: 230px;" id="mbr" value="1" placeholder="xmin, ymin, xmax, ymax"/><br>';	
-	
+	    html+='영역<input style="margin-top:5px; height:25px; width: 230px;" id="mbr" value="1" placeholder="xmin, ymin, xmax, ymax"/><br>';
+	    html+='클릭좌표<input style="margin-top:5px; height:25px; width: 230px;" id="clickCoord" value="" placeholder="지도 클릭 시 표시" readonly/><br>';
+
 	html+='주제도와 타일 리스트<br>';
 	
 	$.ajax ({
