@@ -959,17 +959,18 @@ public class StyleFactory {
 		}
 
 		if (fs.getPattern() != null && fs.getPattern().length() > 0 && bse.isRenderingLine()) {
+			// 방안 A: line 패턴(dash)이 있어도 fill(casing)을 끄지 않는다.
+			// fillStyle 이 있는 스타일만 fill 이 유지되며(setFillStyle 에서 renderingFill=true),
+			// fillStyle 이 없는 스타일은 이미 renderingFill=false 이므로 영향 없음.
 			String[] pattterns = fs.getPattern().split(",");
 			if (pattterns.length >= 2) {
 				bse.setRenderingLinePattern(true);
 				bse.setLinePattern(fs.getPattern());
-				bse.setRenderingFill(false);
 			} else {
 				pattterns = fs.getPattern().split("/");
 				if (pattterns.length >= 2) {
 					bse.setRenderingLinePattern(true);
 					bse.setLinePattern(fs.getPattern());
-					bse.setRenderingFill(false);
 				}
 			}
 		} else {
