@@ -197,6 +197,10 @@ public class Oper {
 
 	Mbr[] selectMbr = null;
 
+	// kmp.properties 등에서 levelSet.* 로 정의한 타일 생성 영역(LevelSet 목록).
+	// null 이면 미설정 → 기존 하드코딩 로직 사용(옵트인).
+	List<LevelSet> configLevelSets = null;
+
 	boolean tileMbrUpdate = true;
 
 	HashMap<String, LayerInfo> layerInfos = new HashMap();
@@ -799,37 +803,80 @@ public class Oper {
 				op.saveLayerSkipExist = true;
 			}
 
+			// 타일 생성 영역(LevelSet) 설정. tileMbrUpdate 와 무관하게 항상 읽는다.
+			// levelSet.count / levelSet.N.startLevel / levelSet.N.endLevel / levelSet.N.mbr
+			// (mbr 하나 = minx,miny,maxx,maxy, 여러 개는 | 로 구분)
+			String levelSetCountS = property.getProperty("levelSet.count");
+			if (levelSetCountS != null && levelSetCountS.trim().length() > 0) {
+				try {
+					int lsCount = Integer.parseInt(levelSetCountS.trim());
+					List<LevelSet> cfgList = new ArrayList<LevelSet>();
+					for (int n = 1; n <= lsCount; n++) {
+						String slS = property.getProperty("levelSet." + n + ".startLevel");
+						String elS = property.getProperty("levelSet." + n + ".endLevel");
+						String mbrS = property.getProperty("levelSet." + n + ".mbr");
+						if (slS == null || elS == null || mbrS == null) {
+							System.out.println("levelSet." + n + " 설정 누락(startLevel/endLevel/mbr) → 건너뜀");
+							continue;
+						}
+						LevelSet cls = new LevelSet();
+						cls.setStartLevel(Integer.parseInt(slS.trim()));
+						cls.setEndLevel(Integer.parseInt(elS.trim()));
+						List<Mbr> cmbrs = cls.getMbr();
+						for (String one : mbrS.split("\\|")) {
+							String[] c = one.split(",");
+							if (c.length < 4) {
+								continue;
+							}
+							Mbr mb = new Mbr();
+							mb.setMinx(Double.parseDouble(c[0].trim()));
+							mb.setMiny(Double.parseDouble(c[1].trim()));
+							mb.setMaxx(Double.parseDouble(c[2].trim()));
+							mb.setMaxy(Double.parseDouble(c[3].trim()));
+							cmbrs.add(mb);
+						}
+						cfgList.add(cls);
+					}
+					if (!cfgList.isEmpty()) {
+						op.configLevelSets = cfgList;
+						System.out.println("levelSet 설정 적용: " + cfgList.size() + " 개");
+					}
+				} catch (Exception e) {
+					System.out.println("levelSet 설정 파싱 오류 → 기존 방식 사용");
+					e.printStackTrace();
+				}
+			}
+
 			String fontPath = property.getProperty("fontPath");
 			if (fontPath != null && fontPath.length() > 0) {
 				StorageMng.fontPath = fontPath;
 			}
 
-			
-			if(!op.newMode) {
+			if (!op.newMode) {
 				op.readExcel();
 			}
-			
+
 			if (makeServiceInfo.equals("true")) {
 				if (op.newMode) {
 					new GisStyleExcelTool.Importer(op.excelpath).run(op.dstPath);
-					//op.readEmapServiceInfo(false);
-					//op.saveEmapServiceInfo(false);
+					// op.readEmapServiceInfo(false);
+					// op.saveEmapServiceInfo(false);
 				}
 			}
-			
+
 			if (makeLayer.equals("true")) {
 
 				if (op.newMode) {
-					
+
 					op.readEmapServiceInfo(false);
-					
+
 					op.saveEmapServiceInfo(true);
-					
+
 				} else {
 					op.makeLayers();
 				}
 			}
-			
+
 			if (makeServiceInfo.equals("true")) {
 				if (!op.newMode) {
 					boolean gridLayer = false;
@@ -840,7 +887,6 @@ public class Oper {
 
 				}
 			}
-
 
 			if (makeTile.equals("true")) {
 				if (op.newMode) {
@@ -860,8 +906,8 @@ public class Oper {
 			LOG.debug(e.toString(), e);
 		}
 		long et = System.currentTimeMillis();
-		
-		System.out.println("job time = " + (et-st)/1000);
+
+		System.out.println("job time = " + (et - st) / 1000);
 		System.exit(0);
 	}
 
@@ -909,9 +955,8 @@ public class Oper {
 
 		boolean layerSave = true;
 		boolean processSave = true;
-		
-		
-		if(!save) {
+
+		if (!save) {
 			layerSave = false;
 			processSave = false;
 		}
@@ -933,11 +978,10 @@ public class Oper {
 				List<com.gis.protocol.LayerInfo> layerInfos = levelConfig.getLayerInfo();
 				for (com.gis.protocol.LayerInfo layerInfo : layerInfos) {
 					String layerName = layerInfo.getLayerName();
-					
-					
+
 					String[] arry = layerName.split(":");
-					
-					layerNames.put(arry[arry.length-1], arry[arry.length-1]);
+
+					layerNames.put(arry[arry.length - 1], arry[arry.length - 1]);
 				}
 			}
 		}
@@ -1251,7 +1295,7 @@ public class Oper {
 
 						JobInfo remove = jobInfos.remove(idx);
 
-						//System.out.println("remove jobInfo = " + remove.saveLayerFile);
+						// System.out.println("remove jobInfo = " + remove.saveLayerFile);
 					}
 
 					jobInfos.add(jobInfo);
@@ -2101,11 +2145,10 @@ public class Oper {
 			if (this.mapInfos.containsKey(tileName)) {
 				MapInfo mapInfo = this.mapInfos.get(tileName);
 				if (this.isTileShutdown == false) {
-					
-					if(this.newMode) {
+
+					if (this.newMode) {
 						this.makeTile_emap(mapInfo, threadCnt, tileUpdate);
-					}
-					else {
+					} else {
 						this.makeTile(mapInfo, threadCnt, tileUpdate);
 					}
 				}
@@ -2113,11 +2156,9 @@ public class Oper {
 		}
 
 	}
-	
-	
-	
+
 	public void makeTile(MapInfo _mapInfo, int threadCnt, boolean tileUpdate) {
-		
+
 		System.out.println("makeTile start =" + _mapInfo.getName());
 
 		MapInfo mapInfo = _mapInfo;
@@ -2143,7 +2184,7 @@ public class Oper {
 		}
 
 		tmf = new TileMapFactory2(mapInfo.getName(), mapInfo.getScaleInfos(), dbPath);
-		
+
 		StorageMng.threadCnt = threadCnt;
 
 		tmf.setThreadCnt(threadCnt);
@@ -2158,10 +2199,45 @@ public class Oper {
 
 		jt.setThreadCnt(threadCnt);
 
-		
+		buildLevelSets(jt, _mapInfo);
+
+		tmf.makeTile(jt, false, tileUpdate, this.tileMbrUpdate);
+
+	}
+
+	/**
+	 * JobTile 에 LevelSet(타일 생성 영역) 을 구성한다.
+	 * - configLevelSets(levelSet.* 설정)가 있고 tileMbrUpdate 가 아니면 그 설정을 사용.
+	 * - 그 외에는 기존 하드코딩 로직(레벨 min~max + 도서/내륙 MBR, emp 특수처리, selectMbr override)을 사용.
+	 */
+	public void buildLevelSets(JobTile jt, MapInfo _mapInfo) {
+
 		List<LevelSet> lss = jt.getLevelSet();
+
+		// levelSet.* 설정 우선 (단, tileMbrUpdate=true 이면 기존 방식 사용)
+		if (this.configLevelSets != null && !this.tileMbrUpdate) {
+			for (LevelSet src : this.configLevelSets) {
+				LevelSet cls = new LevelSet();
+				cls.setStartLevel(src.getStartLevel());
+				cls.setEndLevel(src.getEndLevel());
+				List<Mbr> dst = cls.getMbr();
+				for (Mbr sm : src.getMbr()) {
+					Mbr mb = new Mbr();
+					mb.setMinx(sm.getMinx());
+					mb.setMiny(sm.getMiny());
+					mb.setMaxx(sm.getMaxx());
+					mb.setMaxy(sm.getMaxy());
+					dst.add(mb);
+				}
+				lss.add(cls);
+			}
+			System.out.println("타일 영역: levelSet 설정 사용 (" + lss.size() + " 개)");
+			return;
+		}
+
+		// ── 기존 하드코딩 로직 ──────────────────────────────
+		MapInfo mapInfo = _mapInfo;
 		LevelSet ls = new LevelSet();
-		
 
 		int minLevel = Integer.MAX_VALUE;
 		int maxLevel = Integer.MIN_VALUE;
@@ -2195,12 +2271,13 @@ public class Oper {
 		}
 
 		List<Mbr> mbrs = ls.getMbr();
-		// 독도
+		// 독도 1381908,1922126,1392334,1926966
+
 		Mbr m1 = new Mbr();
-		m1.setMinx(1392551);
-		m1.setMiny(1945271);
-		m1.setMaxx(1394884);
-		m1.setMaxy(1947451);
+		m1.setMinx(1381908);
+		m1.setMiny(1922126);
+		m1.setMaxx(1392334);
+		m1.setMaxy(1926966);
 
 		// 울릉도
 		Mbr m2 = new Mbr();
@@ -2225,30 +2302,27 @@ public class Oper {
 		mbrs.add(m2);
 		mbrs.add(m3);
 		mbrs.add(m4);
-		
-		if( _mapInfo.getName().indexOf("emp") > -1 ){
+
+		if (_mapInfo.getName().indexOf("emp") > -1) {
 			ls.setStartLevel(6);
 
 			LevelSet empls = new LevelSet();
 			empls.setStartLevel(1);
 			empls.setEndLevel(5);
 			List<Mbr> empmbrs = empls.getMbr();
-			
-			
-			
+
 			Mbr empmbr = new Mbr();
 			empmbr.setMinx(-285500);
 			empmbr.setMiny(1265322);
-			
-			
+
 			empmbr.setMaxx(2721971);
 			empmbr.setMaxy(2980176);
 			empmbrs.add(empmbr);
-			
+
 			lss.add(empls);
-			
+
 		}
-		
+
 		lss.add(ls);
 
 		if (this.selectMbr != null) {
@@ -2260,11 +2334,7 @@ public class Oper {
 
 			// mbrs.add(this.selectMbr);
 		}
-
-		tmf.makeTile(jt, false, tileUpdate, this.tileMbrUpdate);
-
 	}
-
 
 	public void makeTile_emap(MapInfo _mapInfo, int threadCnt, boolean tileUpdate) {
 
@@ -2339,110 +2409,14 @@ public class Oper {
 
 		jt.setThreadCnt(threadCnt);
 
-		List<LevelSet> lss = jt.getLevelSet();
-		LevelSet ls = new LevelSet();
-
-		int minLevel = Integer.MAX_VALUE;
-		int maxLevel = Integer.MIN_VALUE;
-		LevelConfigs lcs = mapInfo.getLevelConfigs();
-		List<LevelConfig> lcsss = lcs.getLevelConfig();
-		for (LevelConfig lc : lcsss) {
-			if (lc.getLayerInfo().size() > 0) {
-				if (minLevel > lc.getLevelId()) {
-					minLevel = lc.getLevelId();
-				}
-				if (maxLevel < lc.getLevelId()) {
-					maxLevel = lc.getLevelId();
-				}
-			}
-		}
-
-		ls.setStartLevel(minLevel);
-
-		if (this.stLevel != -1) {
-			if (minLevel < this.stLevel) {
-				ls.setStartLevel(this.stLevel);
-			}
-		}
-
-		ls.setEndLevel(maxLevel);
-
-		if (this.edLevel != -1) {
-			if (maxLevel > this.edLevel) {
-				ls.setEndLevel(this.edLevel);
-			}
-		}
-
-		List<Mbr> mbrs = ls.getMbr();
-		// 독도
-		Mbr m1 = new Mbr();
-		m1.setMinx(1392551);
-		m1.setMiny(1945271);
-		m1.setMaxx(1394884);
-		m1.setMaxy(1947451);
-
-		// 울릉도
-		Mbr m2 = new Mbr();
-		m2.setMinx(1289319);
-		m2.setMiny(1943105);
-		m2.setMaxx(1305002);
-		m2.setMaxy(1956703);
-		// 제주도
-		Mbr m3 = new Mbr();
-		m3.setMinx(870507);
-		m3.setMiny(1457936);
-		m3.setMaxx(951913);
-		m3.setMaxy(1510332);
-		// 내륙
-		Mbr m4 = new Mbr();
-		m4.setMinx(745135);
-		m4.setMiny(1537165);
-		m4.setMaxx(1192594);
-		m4.setMaxy(2070199);
-
-		mbrs.add(m1);
-		mbrs.add(m2);
-		mbrs.add(m3);
-		mbrs.add(m4);
-
-		if (_mapInfo.getName().indexOf("emp") > -1) {
-			ls.setStartLevel(6);
-
-			LevelSet empls = new LevelSet();
-			empls.setStartLevel(1);
-			empls.setEndLevel(5);
-			List<Mbr> empmbrs = empls.getMbr();
-
-			Mbr empmbr = new Mbr();
-			empmbr.setMinx(-285500);
-			empmbr.setMiny(1265322);
-
-			empmbr.setMaxx(2721971);
-			empmbr.setMaxy(2980176);
-			empmbrs.add(empmbr);
-
-			lss.add(empls);
-
-		}
-
-		lss.add(ls);
-
-		if (this.selectMbr != null) {
-			mbrs.clear();
-
-			for (Mbr sm : this.selectMbr) {
-				mbrs.add(sm);
-			}
-
-			// mbrs.add(this.selectMbr);
-		}
+		buildLevelSets(jt, _mapInfo);
 
 		tmf.makeTile(jt, false, tileUpdate, this.tileMbrUpdate);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param files
 	 * @param srcPath
 	 * @param dstPath
@@ -3318,7 +3292,7 @@ public class Oper {
 	}
 
 	public void closeExcel() throws Exception {
-		if(this.workbook != null) {
+		if (this.workbook != null) {
 			this.workbook.close();
 		}
 	}
